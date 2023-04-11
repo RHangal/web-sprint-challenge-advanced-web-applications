@@ -5,6 +5,7 @@ import LoginForm from "./LoginForm";
 import Message from "./Message";
 import ArticleForm from "./ArticleForm";
 import Spinner from "./Spinner";
+import axios from "axios";
 
 const articlesUrl = "http://localhost:9000/api/articles";
 const loginUrl = "http://localhost:9000/api/login";
@@ -34,6 +35,10 @@ export default function App() {
   };
 
   const login = ({ username, password }) => {
+    axios
+      .post(loginUrl, { username: username, password: password })
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
     // ✨ implement
     // We should flush the message state, turn on the spinner
     // and launch a request to the proper endpoint.
@@ -72,8 +77,8 @@ export default function App() {
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
-      <Spinner />
-      <Message />
+      <Spinner on={spinnerOn} />
+      <Message message={message} />
       <button id="logout" onClick={logout}>
         Logout from app
       </button>
@@ -90,7 +95,7 @@ export default function App() {
           </NavLink>
         </nav>
         <Routes>
-          <Route path="/" element={<LoginForm />} />
+          <Route path="/" element={<LoginForm login={login} />} />
           <Route
             path="articles"
             element={
