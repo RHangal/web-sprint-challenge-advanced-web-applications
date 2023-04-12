@@ -26,12 +26,19 @@ export default function App() {
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const RedirectToLogin = ({ children }) => {
+
+  const redirectToLogin = () => {
     if (!token) {
       return <Navigate to="/" />;
+    } else {
+      return (
+        <>
+          <ArticleForm />
+          <Articles getArticles={getArticles} articles={articles} />
+        </>
+      );
+      /* ✨ implement */
     }
-    return children;
-    /* ✨ implement */
   };
   const redirectToArticles = () => {
     /* ✨ implement */
@@ -50,13 +57,15 @@ export default function App() {
     setSpinnerOn(true);
     axios
       .post(loginUrl, { username: username, password: password })
-      .then((res) => {
-        console.log(res),
+      .then(
+        (res) => (
+          console.log(res),
           localStorage.setItem("token", res.data.token),
           setMessage(res.data.message),
-          setSpinnerOn(false);
-        navigate("/articles");
-      })
+          setSpinnerOn(false),
+          navigate("/articles")
+        )
+      )
       .catch((err) => console.error(err));
     // ✨ implement
     // We should flush the message state, turn on the spinner
@@ -67,6 +76,18 @@ export default function App() {
   };
 
   const getArticles = () => {
+    setMessage(""),
+      setSpinnerOn(true),
+      axios
+        .get(articlesUrl, { headers: { authorization: token } })
+        .then(
+          (res) => (
+            console.log(res),
+            setArticles(res.data.articles),
+            setMessage(res.data.message),
+            setSpinnerOn(false)
+          )
+        );
     // ✨ implement
     // We should flush the message state, turn on the spinner
     // and launch an authenticated request to the proper endpoint.
@@ -115,14 +136,7 @@ export default function App() {
         </nav>
         <Routes>
           <Route path="/" element={<LoginForm login={login} />} />
-          <Route
-            path="articles"
-            element={
-              <RedirectToLogin>
-                <ArticleForm />, <Articles />
-              </RedirectToLogin>
-            }
-          />
+          <Route path="articles" element={redirectToLogin()} />
         </Routes>
         <footer>Bloom Institute of Technology 2022</footer>
       </div>
