@@ -30,21 +30,23 @@ export default function App() {
   const redirectToLogin = () => {
     if (!token) {
       return <Navigate to="/" />;
-    } else {
-      return (
-        <>
-          <ArticleForm />
-          <Articles getArticles={getArticles} articles={articles} />
-        </>
-      );
-      /* ✨ implement */
     }
+    return (
+      <>
+        <ArticleForm />
+        <Articles getArticles={getArticles} articles={articles} />
+      </>
+    );
+    /* ✨ implement */
   };
   const redirectToArticles = () => {
     /* ✨ implement */
   };
 
   const logout = () => {
+    localStorage.removeItem("token");
+    setMessage("Goodbye!");
+    navigate("/");
     // ✨ implement
     // If a token is in local storage it should be removed,
     // and a message saying "Goodbye!" should be set in its proper state.
@@ -87,7 +89,8 @@ export default function App() {
             setMessage(res.data.message),
             setSpinnerOn(false)
           )
-        );
+        )
+        .catch((err) => console.error(err));
     // ✨ implement
     // We should flush the message state, turn on the spinner
     // and launch an authenticated request to the proper endpoint.
