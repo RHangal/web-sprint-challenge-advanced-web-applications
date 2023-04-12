@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { NavLink, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  NavLink,
+  Routes,
+  Route,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
 import Articles from "./Articles";
 import LoginForm from "./LoginForm";
 import Message from "./Message";
@@ -19,7 +25,12 @@ export default function App() {
 
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate();
-  const redirectToLogin = () => {
+  const token = localStorage.getItem("token");
+  const RedirectToLogin = ({ children }) => {
+    if (!token) {
+      return <Navigate to="/" />;
+    }
+    return children;
     /* ✨ implement */
   };
   const redirectToArticles = () => {
@@ -35,9 +46,17 @@ export default function App() {
   };
 
   const login = ({ username, password }) => {
+    setMessage("");
+    setSpinnerOn(true);
     axios
       .post(loginUrl, { username: username, password: password })
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res),
+          localStorage.setItem("token", res.data.token),
+          setMessage(res.data.message),
+          setSpinnerOn(false);
+        navigate("/articles");
+      })
       .catch((err) => console.error(err));
     // ✨ implement
     // We should flush the message state, turn on the spinner
@@ -99,10 +118,9 @@ export default function App() {
           <Route
             path="articles"
             element={
-              <>
-                <ArticleForm />
-                <Articles />
-              </>
+              <RedirectToLogin>
+                <ArticleForm />, <Articles />
+              </RedirectToLogin>
             }
           />
         </Routes>
