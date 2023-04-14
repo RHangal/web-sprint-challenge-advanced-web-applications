@@ -37,7 +37,11 @@ export default function App() {
           postArticle={postArticle}
           currentArticle={currentArticleId}
         />
-        <Articles getArticles={getArticles} articles={articles} />
+        <Articles
+          getArticles={getArticles}
+          articles={articles}
+          deleteArticle={deleteArticle}
+        />
       </>
     );
     /* ✨ implement */
@@ -132,6 +136,23 @@ export default function App() {
   };
 
   const deleteArticle = (article_id) => {
+    setSpinnerOn(true),
+      axios
+        .delete(`http://localhost:9000/api/articles/${article_id}`, {
+          headers: { authorization: token },
+        })
+        .then(
+          (res) => (
+            console.log(res),
+            setArticles(
+              articles.filter((art) => art.article_id !== article_id)
+            ),
+            setMessage(res.data.message),
+            setSpinnerOn(false)
+          )
+        )
+        .catch((err) => console.error(err));
+
     // ✨ implement
   };
 

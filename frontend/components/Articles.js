@@ -6,7 +6,7 @@ import { articlesUrl } from "./App";
 import { token } from "./App";
 
 export default function Articles(props) {
-  const { getArticles, articles } = props;
+  const { getArticles, articles, deleteArticle } = props;
   // ✨ where are my props? Destructure them here
 
   // ✨ implement conditional logic: if no token exists
@@ -37,7 +37,10 @@ export default function Articles(props) {
                   <button disabled={true} onClick={Function.prototype}>
                     Edit
                   </button>
-                  <button disabled={true} onClick={Function.prototype}>
+                  <button
+                    disabled={false}
+                    onClick={() => deleteArticle(art.article_id)}
+                  >
                     Delete
                   </button>
                 </div>
