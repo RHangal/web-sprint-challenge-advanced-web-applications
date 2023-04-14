@@ -5,6 +5,7 @@ const initialFormValues = { title: "", text: "", topic: "" };
 
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues);
+  const { postArticle, currentArticleId } = props;
   // ✨ where are my props? Destructure them here
   console.log(Object.values(values));
 
@@ -22,6 +23,7 @@ export default function ArticleForm(props) {
 
   const onSubmit = (evt) => {
     evt.preventDefault();
+    currentArticleId ? null : postArticle(values);
     // ✨ implement
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.

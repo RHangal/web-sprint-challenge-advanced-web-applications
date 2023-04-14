@@ -33,7 +33,10 @@ export default function App() {
     }
     return (
       <>
-        <ArticleForm />
+        <ArticleForm
+          postArticle={postArticle}
+          currentArticle={currentArticleId}
+        />
         <Articles getArticles={getArticles} articles={articles} />
       </>
     );
@@ -102,6 +105,21 @@ export default function App() {
   };
 
   const postArticle = (article) => {
+    setMessage(""),
+      setSpinnerOn(true),
+      axios
+        .post(articlesUrl, article, { headers: { authorization: token } })
+        .then(
+          (res) => (
+            console.log(res),
+            setArticles(articles.concat(res.data.article)),
+            console.log(articles),
+            setMessage(res.data.message),
+            setSpinnerOn(false)
+          )
+        )
+
+        .catch((err) => console.error(err));
     // ✨ implement
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
