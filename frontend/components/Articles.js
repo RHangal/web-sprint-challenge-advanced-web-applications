@@ -6,7 +6,13 @@ import { articlesUrl } from "./App";
 import { token } from "./App";
 
 export default function Articles(props) {
-  const { getArticles, articles, deleteArticle } = props;
+  const {
+    getArticles,
+    articles,
+    deleteArticle,
+    setCurrentArticle,
+    setCurrentArticleId,
+  } = props;
   // ✨ where are my props? Destructure them here
 
   // ✨ implement conditional logic: if no token exists
@@ -17,6 +23,15 @@ export default function Articles(props) {
     getArticles();
     // ✨ grab the articles here, on first render only
   }, []);
+
+  const editArticle = (id, title, text, topic) => {
+    setCurrentArticle({
+      article_id: id,
+      title: title,
+      text: text,
+      topic: topic,
+    });
+  };
 
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
@@ -34,7 +49,17 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={true} onClick={Function.prototype}>
+                  <button
+                    disabled={false}
+                    onClick={() =>
+                      editArticle(
+                        art.article_id,
+                        art.title,
+                        art.text,
+                        art.topic
+                      )
+                    }
+                  >
                     Edit
                   </button>
                   <button

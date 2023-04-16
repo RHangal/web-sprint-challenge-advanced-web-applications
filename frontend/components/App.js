@@ -22,6 +22,7 @@ export default function App() {
   const [articles, setArticles] = useState([]);
   const [currentArticleId, setCurrentArticleId] = useState();
   const [spinnerOn, setSpinnerOn] = useState(false);
+  const [currentArticle, setCurrentArticle] = useState(null);
 
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate();
@@ -35,12 +36,17 @@ export default function App() {
       <>
         <ArticleForm
           postArticle={postArticle}
-          currentArticle={currentArticleId}
+          updateArticle={updateArticle}
+          currentArticleId={currentArticleId}
+          currentArticle={currentArticle}
+          setCurrentArticle={setCurrentArticle}
+          setCurrentArticleId={setCurrentArticleId}
         />
         <Articles
           getArticles={getArticles}
           articles={articles}
           deleteArticle={deleteArticle}
+          setCurrentArticle={setCurrentArticle}
         />
       </>
     );
@@ -130,7 +136,27 @@ export default function App() {
     // to inspect the response from the server.
   };
 
-  const updateArticle = ({ article_id, article }) => {
+  const updateArticle = (article_id, article) => {
+    setMessage(""),
+      setSpinnerOn(true),
+      axios
+        .put(
+          `http://localhost:9000/api/articles/${article_id}`,
+
+          article,
+          {
+            headers: { authorization: token },
+          }
+        )
+        .then(
+          (res) => (
+            console.log(res),
+            setArticles(articles.splice(article_id - 1, 1, res.data.article)),
+            setMessage(res.data.message),
+            setSpinnerOn(false)
+          )
+        )
+        .catch((err) => console.error(err));
     // ✨ implement
     // You got this!
   };
