@@ -151,7 +151,10 @@ export default function App() {
         .then(
           (res) => (
             console.log(res),
-            setArticles(articles.splice(article_id - 1, 1, res.data.article)),
+            articles.splice(article_id - 1, 1, res.data.article),
+            // setArticles(
+            //   articles.splice(article_id - 1, 1, res.data.article)
+            // ),
             setMessage(res.data.message),
             setSpinnerOn(false)
           )
