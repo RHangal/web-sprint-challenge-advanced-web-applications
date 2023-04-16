@@ -97,7 +97,6 @@ export default function App() {
         .get(articlesUrl, { headers: { authorization: token } })
         .then(
           (res) => (
-            console.log(res),
             setArticles(res.data.articles),
             setMessage(res.data.message),
             setSpinnerOn(false)
